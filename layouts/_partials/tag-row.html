@@ -1,0 +1,8 @@
+{{- /* Crumbs row on single pages: section tag, subtype, #tags, issue, status, date + reading time */ -}}
+{{- $p := . -}}
+<span class="tag">{{ partial "section-label.html" $p }}</span>
+{{- with partial "subtype.html" $p }}<span class="tag ghost">{{ . }}</span>{{ end }}
+{{- range $p.GetTerms "tags" }}<a class="tag ghost" href="{{ .RelPermalink }}">#{{ .LinkTitle }}</a>{{ end }}
+{{- with partial "issue.html" $p }}<span class="issue-no">ISSUE #{{ . }}</span>{{ end }}
+{{- partial "status.html" (dict "page" $p) }}
+{{- partial "dateline.html" $p }}

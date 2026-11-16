@@ -1,0 +1,39 @@
+{{ define "main" }}
+{{- $v := .Params.verdict | default "watch" }}
+{{- $paras := len (findRE `<p[ >]` .Content) }}
+{{- if gt $paras 3 }}{{ warnf "%s: Watch posts should stay short (3 paragraphs max); this one has %d" .File.Path $paras }}{{ end }}
+<div class="wrap">
+  <div class="post-layout narrow">
+    <article>
+      <div style="padding-top:20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        {{ partial "tag-row.html" . }}
+      </div>
+
+      <div class="panel watch-card">
+        <div>
+          <h1 style="font-size:40px;margin-bottom:10px">{{ .Params.name | default .Title }}</h1>
+          <dl class="facts">
+            {{- $type := slice }}{{ with .Params.kind }}{{ $type = $type | append . }}{{ end }}{{ with .Params.year }}{{ $type = $type | append (string .) }}{{ end }}
+            {{- with $type }}<dt>Type</dt><dd>{{ delimit . " · " }}</dd>{{ end }}
+            {{- with .Params.runtime }}<dt>Runtime</dt><dd>{{ . }}</dd>{{ end }}
+            {{- with .Params.where }}<dt>Where</dt><dd>{{ . }}</dd>{{ end }}
+            {{- with .Params.why }}<dt>Chose it because</dt><dd>{{ . | markdownify }}</dd>{{ end }}
+          </dl>
+          <div class="verdict-scale">
+            {{- range slice "watch" "wait" "skip" }}<span class="{{ . }}{{ if eq . $v }} on{{ end }}">{{ title . }}</span>{{ end -}}
+          </div>
+        </div>
+        <span class="stamp {{ cond (eq $v "watch") "go" $v }}">{{ upper $v }}</span>
+      </div>
+
+      <div class="prose" style="margin-top:40px">
+        {{ .Content }}
+        {{- with .Params.related }}{{ with site.GetPage . }}
+        {{ partial "callout.html" (dict "label" "If you liked this" "body" (printf `<a href="%s">%s</a> %s` .RelPermalink .Title ($.Params.related_note | default "" | markdownify) | safeHTML)) }}
+        {{- else }}{{ warnf "%s: related %q not found" $.File.Path . }}{{ end }}{{ end }}
+        {{- with .Params.factcheck }}{{ partial "callout.html" (dict "label" "Fact-check note" "body" (. | markdownify)) }}{{ end }}
+      </div>
+    </article>
+  </div>
+</div>
+{{ end }}

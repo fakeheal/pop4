@@ -1,0 +1,3 @@
+{{- /* "· Nov 9, 2026 · 8 min read" plus "· updated …" when lastmod is a later day */ -}}
+<span class="meta">· <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>{{ if .IsPage }} · {{ .ReadingTime }} min read{{ end }}
+{{- if gt (.Lastmod.Sub .Date).Hours 24 }} · updated <time datetime="{{ .Lastmod.Format "2006-01-02" }}">{{ .Lastmod.Format "Jan 2" }}</time>{{ end }}</span>

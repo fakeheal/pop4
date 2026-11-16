@@ -1,0 +1,2 @@
+{{- $m := dict "read" "Read" "play" "Play" "make" "Make" "watch" "Watch" "roundups" "Roundup" -}}
+{{- return (index $m .Section | default (.Section | title)) -}}

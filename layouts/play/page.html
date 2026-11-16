@@ -1,0 +1,90 @@
+{{ define "main" }}
+{{- $isMain := and .Params.main (not .Params.deck) }}
+<section class="post-hero">
+  <div class="wrap">
+    <div class="crumbs">{{ partial "tag-row.html" . }}</div>
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.summary }}
+    <p class="dek">{{ . }}</p>
+    {{- end }}
+
+    <div class="panel statgrid">
+      <div><small>Game</small><strong>{{ partial "game.html" . }}</strong></div>
+      <div><small>{{ .Params.hero_label | default (cond $isMain "Main" "Hero / aspect") }}</small><strong>{{ .Params.hero | default .Params.main.hero }}</strong></div>
+      <div><small>Record</small><strong>{{ .Params.record | default "—" }}</strong></div>
+      <div><small>{{ .Params.pool_label | default (cond $isMain "Patch" "Card pool as of") }}</small><strong>{{ .Params.pool_as_of | default "—" }}</strong></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="post-layout">
+    <article class="prose">
+      {{- with .Params.why }}{{ partial "callout.html" (dict "label" (cond $isMain "Why this main" "Why this deck") "body" (. | markdownify)) }}{{ end }}
+      {{ .Content }}
+      {{- if and .Params.sessions (not (.HasShortcode "sessions")) }}
+      <h2>Session log</h2>
+      {{ partial "sessions.html" . }}
+      {{- end }}
+      {{- with .Params.verdict }}
+      <h2>Verdict</h2>
+      <div class="verdict-row">
+        {{- range slice (slice "retire" "Retire") (slice "tweak" "Tweak") (slice "keep" "Keep as is") }}<span{{ if eq (index . 0) $.Params.verdict }} class="on"{{ end }}>{{ index . 1 }}</span>{{ end -}}
+      </div>
+      {{- end }}
+      {{- with .Params.factcheck }}{{ partial "callout.html" (dict "label" "Fact-check note" "body" (. | markdownify)) }}{{ end }}
+    </article>
+
+    <aside class="aside">
+      <div class="panel box">
+        {{- with .Params.deck }}
+        <h3>Decklist <button class="copy" type="button" hidden>Copy</button></h3>
+        <div class="deck" id="deck">
+          {{- range . }}
+          {{- $n := 0 }}{{ range .cards }}{{ $n = add $n (int .qty) }}{{ end }}
+          <h4>{{ .group }} ({{ $n }})</h4>
+          {{- range .cards }}
+          <div class="row"><span>{{ .name }}</span><b>{{ .qty }}</b></div>
+          {{- end }}
+          {{- end }}
+        </div>
+        {{- end }}
+        {{- with .Params.main }}
+        <h3{{ if $.Params.deck }} style="margin-top:22px"{{ end }}>My main</h3>
+        <dl class="facts">
+          {{- with .hero }}<dt>Hero</dt><dd><strong>{{ . }}</strong></dd>{{ end }}
+          {{- with .role }}<dt>Role</dt><dd>{{ . }}</dd>{{ end }}
+          {{- with .hours }}<dt>Hours</dt><dd>{{ . }}</dd>{{ end }}
+          {{- with .clicked }}<dt>What clicked</dt><dd>{{ . }}</dd>{{ end }}
+        </dl>
+        {{- end }}
+        {{- with .Params.curve }}
+        {{- $max := 0 }}{{ range . }}{{ if gt (float .) $max }}{{ $max = float . }}{{ end }}{{ end }}
+        <h3 style="margin-top:22px">Cost curve</h3>
+        <div class="curve" style="margin-bottom:26px">
+          {{- range $k, $v := . }}
+          <div data-c="{{ $k }}" style="height:{{ cond (gt $max 0) (math.Round (mul (div (float $v) $max) 100)) 0 }}%" title="{{ $v }} cards at cost {{ $k }}"></div>
+          {{- end }}
+        </div>
+        {{- end }}
+      </div>
+    </aside>
+  </div>
+</div>
+{{ end }}
+
+{{ define "scripts" }}
+{{- if .Params.deck }}
+<script>
+(() => {
+  const btn = document.querySelector('.copy');
+  if (!btn || !navigator.clipboard) return;
+  btn.hidden = false;
+  btn.addEventListener('click', () => {
+    const rows = [...document.querySelectorAll('#deck .row')].map(r => r.children[1].textContent + 'x ' + r.children[0].textContent);
+    navigator.clipboard.writeText(rows.join('\n')).then(() => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy', 1500); });
+  });
+})();
+</script>
+{{- end }}
+{{ end }}

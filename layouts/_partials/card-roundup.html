@@ -1,0 +1,9 @@
+{{- $p := .page -}}
+      {{ partial "card-open.html" . }}
+        <div class="top mini-deck">
+          <div><span>Month</span><span>{{ $p.Params.month }}</span></div>
+          <div><span>Finished</span><span>{{ len ($p.Params.finished | default slice) }}</span></div>
+          <div><span>Dropped</span><span>{{ len ($p.Params.dropped | default slice) }}</span></div>
+          <div><span>Next</span><span>{{ len ($p.Params.next | default slice) }}</span></div>
+        </div>
+{{ partial "card-body.html" (dict "page" $p) }}

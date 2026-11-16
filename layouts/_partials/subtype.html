@@ -1,0 +1,12 @@
+{{- /* First ghost tag in the crumbs: explicit `subtype`, otherwise derived per type */ -}}
+{{- $p := . -}}
+{{- $s := $p.Params.subtype | default "" -}}
+{{- if not $s -}}
+  {{- if eq $p.Section "play" }}{{ $s = partial "game.html" $p }}
+  {{- else if eq $p.Section "read" }}{{ with $p.Params.book.genre }}{{ $s = index (split . " · ") 0 }}{{ end }}
+  {{- else if eq $p.Layout "restoration" }}{{ $s = "Restoration" }}
+  {{- else if eq $p.Layout "gallery" }}{{ $s = "Minifigure painting" }}
+  {{- else if eq $p.Section "watch" }}{{ $s = $p.Params.kind | default "" }}
+  {{- end -}}
+{{- end -}}
+{{- return $s -}}

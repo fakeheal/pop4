@@ -1,0 +1,4 @@
+{{- /* `games` may be a string or a list; return the first game */ -}}
+{{- $g := .Params.games -}}
+{{- if reflect.IsSlice $g }}{{ $g = index $g 0 }}{{ end -}}
+{{- return ($g | default "") -}}

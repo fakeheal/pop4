@@ -1,0 +1,4 @@
+{{- /* Zero-padded issue number, e.g. "012"; "" if unset */ -}}
+{{- $n := "" -}}
+{{- with .Params.issue }}{{ $n = printf "%03d" (int .) }}{{ end -}}
+{{- return $n -}}

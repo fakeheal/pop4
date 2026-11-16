@@ -1,0 +1,39 @@
+baseURL = "https://pop4.itodorova.dev"
+locale = "en"
+title = "POP 4"
+enableRobotsTXT = true
+capitalizeListTitles = false   # keep tag/game names as written (#marvel, Marvel Champions)
+summaryLength = 30
+
+[params]
+  tagline = "pop culture, by iv"
+  description = "Notes on what I read, play, make and watch: comics, fantasy & sci-fi, ttprgs, card games, video games, electronics and tiny painted heroes."
+  author = "iv"
+
+[taxonomies]
+  tag = "tags"
+  game = "games"
+
+[pagination]
+  pagerSize = 12
+
+[outputs]
+  home = ["html", "rss"]
+  section = ["html", "rss"]
+  taxonomy = ["html"]
+  term = ["html", "rss"]
+
+[markup.goldmark.renderer]
+  unsafe = false
+[markup.goldmark.parser]
+  wrapStandAloneImageWithinParagraph = false   # an image on its own line becomes a <figure>
+
+[imaging]
+  resampleFilter = "lanczos"
+  [imaging.jpeg]
+    quality = 82
+  [imaging.webp]
+    quality = 82
+
+[sitemap]
+  changeFreq = "weekly"

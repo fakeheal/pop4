@@ -1,0 +1,74 @@
+{{ define "main" }}
+<section class="post-hero">
+  <div class="wrap">
+    <div class="crumbs">{{ partial "tag-row.html" . }}</div>
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.summary }}
+    <p class="dek">{{ . }}</p>
+    {{- end }}
+
+    {{- /* ba_style: slider (default) | split. In the slider, portrait photos are shown whole over a
+         blurred, stretched copy of themselves; landscape photos fill the frame as before. */}}
+    {{- $mode := .Params.ba_style | default "slider" }}
+    {{- $fit := dict }}
+    {{- range $k, $v := dict "before" .Params.before "after" .Params.after }}
+      {{- with $.Resources.Get (partial "image-src.html" (dict "img" $v)) }}{{ if and (eq .MediaType.MainType "image") (gt .Height .Width) }}{{ $fit = merge $fit (dict $k "blur") }}{{ end }}{{ end }}
+    {{- end }}
+    {{- if eq $mode "split" }}
+    <div class="panel ba-split">
+      {{ partial "placeholder.html" (dict "page" . "img" .Params.before "eager" true "prefix" "BEFORE" "label" "" "badge" "Before" "alt" (printf "%s, before" .Title) "width" 800 "c1" "#8c7a5b" "c2" "#c9b48a") }}
+      {{ partial "placeholder.html" (dict "page" . "img" .Params.after "eager" true "prefix" "AFTER" "label" "" "badge" "After" "alt" (printf "%s, after" .Title) "width" 800 "c1" "#c9c3b5" "c2" "#f2efe8") }}
+    </div>
+    {{- else }}
+    <div class="panel ba{{ if $fit }} ba-portrait{{ end }}" id="ba">
+      {{ partial "placeholder.html" (dict "page" . "img" .Params.after "fit" (index $fit "after") "eager" true "class" "layer after" "prefix" "AFTER" "label" "" "badge" "After" "alt" (printf "%s, after" .Title)) }}
+      {{ partial "placeholder.html" (dict "page" . "img" .Params.before "fit" (index $fit "before") "eager" true "class" "layer before" "prefix" "BEFORE" "label" "" "badge" "Before" "alt" (printf "%s, before" .Title)) }}
+      <div class="handle"></div>
+      <input type="range" min="0" max="100" value="50" aria-label="Before/after slider" oninput="document.getElementById('ba').style.setProperty('--pos', this.value + '%')">
+    </div>
+    {{- end }}
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="post-layout">
+    <article class="prose">
+      {{- with .Params.why }}{{ partial "callout.html" (dict "label" "Why this project" "body" (. | markdownify)) }}{{ end }}
+      {{ .Content }}
+      {{- if and .Params.steps (not (.HasShortcode "steps")) }}
+      <h2>Steps</h2>
+      {{ partial "steps.html" . }}
+      {{- end }}
+      {{- with .Params.factcheck }}{{ partial "callout.html" (dict "label" "Fact-check note" "body" (. | markdownify)) }}{{ end }}
+    </article>
+
+    <aside class="aside">
+      <div class="panel box">
+        {{- $h := false }}
+        {{- with .Params.project }}{{ $h = true }}
+        <h3>Project card</h3>
+        <dl class="facts">
+          {{- range . }}
+          <dt>{{ .k }}</dt><dd>{{ .v }}</dd>
+          {{- end }}
+        </dl>
+        {{- end }}
+        {{- with .Params.parts }}
+        {{- $cur := $.Params.currency | default "€" }}{{ $total := 0.0 }}
+        <h3{{ if $h }} style="margin-top:22px"{{ end }}>Parts &amp; costs</h3>{{ $h = true }}
+        <table class="parts">
+          {{- range . }}{{ $total = add $total (float .cost) }}
+          <tr><td>{{ if .url }}<a href="{{ .url }}" target="_blank" rel="noopener">{{ .item }}</a>{{ else }}{{ .item }}{{ end }}</td><td>{{ $cur }}{{ lang.FormatNumber 2 .cost }}</td></tr>
+          {{- end }}
+          <tr class="total"><td>Total</td><td>{{ $cur }}{{ lang.FormatNumber 2 $total }}</td></tr>
+        </table>
+        {{- end }}
+        {{- with .Params.tools }}
+        <h3{{ if $h }} style="margin-top:22px"{{ end }}>Tools</h3>
+        <div class="skills">{{ range . }}<span>{{ . }}</span>{{ end }}</div>
+        {{- end }}
+      </div>
+    </aside>
+  </div>
+</div>
+{{ end }}

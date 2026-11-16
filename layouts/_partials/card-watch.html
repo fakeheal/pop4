@@ -1,0 +1,4 @@
+{{- $p := .page }}{{ $v := $p.Params.verdict | default "watch" -}}
+      {{ partial "card-open.html" . }}
+        <div class="top mini-verdict"><span class="stamp {{ cond (eq $v "watch") "go" $v }}">{{ upper $v }}</span></div>
+{{ partial "card-body.html" (dict "page" $p) }}

@@ -1,0 +1,19 @@
+{{ define "main" }}
+<section class="post-hero">
+  <div class="wrap">
+    <div class="crumbs">{{ partial "tag-row.html" . }}</div>
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.summary }}
+    <p class="dek">{{ . }}</p>
+    {{- end }}
+  </div>
+</section>
+<div class="wrap">
+  <div style="padding-top:40px">{{ partial "roundup-panel.html" (dict "page" . "link" false) }}</div>
+  {{- with .Content }}
+  <div class="post-layout narrow" style="padding-top:0">
+    <article class="prose">{{ . }}</article>
+  </div>
+  {{- end }}
+</div>
+{{ end }}

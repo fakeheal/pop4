@@ -1,0 +1,48 @@
+{{- /*
+  Renders a .ph block. If `img` names an image in the page bundle, the processed image
+  fills the block; otherwise the halftone placeholder with a label is shown.
+  Args: page, img (string or {src, alt, c1, c2}), class, label (fallback), text (forced label),
+  prefix ("BEFORE" -> "BEFORE: <alt>"), badge (label kept on top of a real image),
+  fit ("blur" = whole photo shown over a blurred, stretched copy of itself),
+  zoom (link to a large version, opened in the lightbox), caption (lightbox caption), alt (fallback alt text), width, style, c1, c2
+*/ -}}
+{{- $p := .page -}}
+{{- $spec := .img -}}
+{{- $src := partial "image-src.html" (dict "img" $spec) -}}
+{{- $alt := "" }}{{ $c1 := .c1 }}{{ $c2 := .c2 -}}
+{{- if reflect.IsMap $spec -}}
+  {{- $alt = $spec.alt | default "" -}}
+  {{- with $spec.c1 }}{{ $c1 = . }}{{ end }}{{ with $spec.c2 }}{{ $c2 = . }}{{ end -}}
+{{- end -}}
+{{- $text := .text | default ($alt | default .label | default "") -}}
+{{- $label := $text -}}
+{{- with .prefix }}{{ $label = cond (ne $text "") (printf "%s: %s" . $text) . }}{{ end -}}
+{{- $res := "" -}}
+{{- with $src }}
+  {{- with $p.Resources.Get . }}{{ if eq .MediaType.MainType "image" }}{{ $res = . }}{{ end }}{{ end -}}
+  {{- if not $res }}{{ warnf "%s: image %q not found in the page bundle, using a placeholder" $p.File.Path . }}{{ end -}}
+{{- end -}}
+{{- $style := slice -}}
+{{- with $c1 }}{{ $style = $style | append (printf "--c1:%s" .) }}{{ end -}}
+{{- with $c2 }}{{ $style = $style | append (printf "--c2:%s" .) }}{{ end -}}
+{{- with .style }}{{ $style = $style | append . }}{{ end -}}
+<div class="ph{{ with .class }} {{ . }}{{ end }}{{ if $res }} has-img{{ if eq .fit "blur" }} fit-blur{{ end }}{{ end }}"{{ with $style }} style="{{ delimit . ";" | safeCSS }}"{{ end }}>
+{{- if $res -}}
+  {{- if eq .fit "blur" -}}
+    {{- /* Blurred, stretched copy fills the frame behind the whole photo (blurred at build time) */ -}}
+    {{- $bg := $res.Resize "120x webp" | images.Filter (images.GaussianBlur 3) -}}
+    <img class="bg" src="{{ $bg.RelPermalink }}" alt="" aria-hidden="true">
+  {{- end -}}
+  {{- $imgAlt := $alt | default .alt | default $p.Title -}}
+  {{- $zoom := and .zoom (not (in (slice "svg" "gif") $res.MediaType.SubType)) -}}
+  {{- if $zoom }}{{ $big := $res.Fit "1600x1600 webp" -}}
+  <a class="zoom" href="{{ $big.RelPermalink }}" data-caption="{{ .caption | default "" }}" aria-label="Enlarge: {{ $imgAlt }}">
+  {{- end -}}
+  {{- partial "picture.html" (dict "res" $res "alt" $imgAlt "width" (.width | default 1200) "eager" .eager) -}}
+  {{- if $zoom }}</a>{{ end -}}
+  {{- with .badge }}<span class="badge">{{ . }}</span>{{ end -}}
+{{- else -}}
+  <span>{{ $label }}</span>
+{{- end -}}
+</div>
+{{- /**/ -}}

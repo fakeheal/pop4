@@ -1,0 +1,72 @@
+{{ define "main" }}
+{{- $b := .Params.book | default dict }}
+<section class="post-hero">
+  <div class="wrap">
+    <div class="crumbs">{{ partial "tag-row.html" . }}</div>
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.summary }}
+    <p class="dek">{{ . }}</p>
+    {{- end }}
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="post-layout">
+    <article>
+      <div class="panel book-card">
+        {{ partial "placeholder.html" (dict "page" . "img" .Params.cover "label" "cover" "alt" (printf "Cover of %s" ($b.title | default .Title)) "width" 400) }}
+        <div>
+          <dl class="facts">
+            <dt>Title</dt><dd><strong>{{ $b.title | default .Title }}</strong></dd>
+            {{- range $k := slice "author" "series" "genre" "length" "format" }}
+            {{- with index $b $k }}
+            <dt>{{ title $k }}</dt><dd>{{ . }}</dd>
+            {{- end }}
+            {{- end }}
+          </dl>
+          {{- with $b.started }}
+          {{- $start := time.AsTime . }}
+          <div class="reading-dates"><span>{{ $start.Format "Jan 2" }}</span><div class="bar"></div>
+          {{- with $b.finished }}{{ $end := time.AsTime . }}<span>{{ $end.Format "Jan 2" }}</span><span>· {{ math.Round (div ($end.Sub $start).Hours 24) }} days</span>
+          {{- else }}<span>still reading</span>{{ end }}</div>
+          {{- end }}
+          {{- with .Params.recommend_to }}
+          <div style="margin-top:14px"><span class="kicker" style="color:var(--muted)">Recommend to</span></div>
+          <ul class="recommend">
+            {{ range . }}<li>{{ . }}</li>{{ end }}
+          </ul>
+          {{- end }}
+        </div>
+      </div>
+
+      <div class="prose">
+        {{- with .Params.why }}{{ partial "callout.html" (dict "label" "Why I picked it up" "body" (. | markdownify)) }}{{ end }}
+        {{ .Content }}
+        {{- with .Params.factcheck }}{{ partial "callout.html" (dict "label" "Fact-check note" "body" (. | markdownify)) }}{{ end }}
+      </div>
+    </article>
+
+    <aside class="aside">
+      <div class="panel box">
+        {{- with .Params.glance }}
+        <h3>At a glance</h3>
+        <dl class="facts">
+          {{- range $i, $e := . }}
+          <dt>{{ $e.k }}</dt><dd>{{ if eq $i 0 }}<strong>{{ $e.v }}</strong>{{ else }}{{ $e.v }}{{ end }}</dd>
+          {{- end }}
+        </dl>
+        {{- end }}
+        {{- $next := slice }}{{ range .Params.read_next }}{{ with site.GetPage . }}{{ $next = $next | append . }}{{ else }}{{ warnf "%s: read_next %q not found" $.File.Path . }}{{ end }}{{ end }}
+        {{- with $next }}
+        <h3{{ if $.Params.glance }} style="margin-top:22px"{{ end }}>Read next</h3>
+        <dl class="facts">
+          {{- range . }}
+          <dt>{{ partial "section-label.html" . }}</dt><dd><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></dd>
+          {{- end }}
+        </dl>
+        {{- end }}
+      </div>
+    </aside>
+  </div>
+</div>
+{{ end }}

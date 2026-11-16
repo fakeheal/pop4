@@ -1,0 +1,8 @@
+{{- $pg := . -}}
+{{- if gt $pg.TotalPages 1 }}
+  <nav class="filters pager" aria-label="Pagination">
+    {{- with $pg.Prev }}<a href="{{ .URL }}">← Newer</a>{{ end }}
+    {{- range $pg.Pagers }}<a href="{{ .URL }}"{{ if eq . $pg }} class="on" aria-current="page"{{ end }}>{{ .PageNumber }}</a>{{ end }}
+    {{- with $pg.Next }}<a href="{{ .URL }}">Older →</a>{{ end }}
+  </nav>
+{{- end }}

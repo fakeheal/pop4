@@ -1,0 +1,11 @@
+<ol class="timeline">
+  {{- range .Params.steps }}
+  <li{{ if not .done }} style="opacity:.5"{{ end }}><div><h3>{{ .title }}</h3>{{ with .text }}<p>{{ . | markdownify }}</p>{{ end }}</div>
+    {{- if .done }}
+    {{ partial "placeholder.html" (dict "page" $ "img" .image "label" "photo" "alt" .title "width" 500 "zoom" true "caption" .title) }}
+    {{- else }}
+    {{ partial "placeholder.html" (dict "page" $ "img" .image "label" "coming soon" "alt" .title "c1" "#bbb" "c2" "#eee" "width" 500 "zoom" true "caption" .title) }}
+    {{- end }}
+  </li>
+  {{- end }}
+</ol>

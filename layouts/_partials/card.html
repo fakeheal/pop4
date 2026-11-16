@@ -1,0 +1,7 @@
+{{- /* Dispatch to the card for this post type. Pass the page, or (dict "page" p "extra" true). */ -}}
+{{- $p := . }}{{ $extra := false -}}
+{{- if reflect.IsMap . }}{{ $p = .page }}{{ $extra = .extra }}{{ end -}}
+{{- $kind := $p.Section -}}
+{{- if eq $p.Section "make" }}{{ $kind = $p.Layout | default "restoration" }}{{ end -}}
+{{- if eq $p.Section "roundups" }}{{ $kind = "roundup" }}{{ end -}}
+{{- partial (printf "card-%s.html" $kind) (dict "page" $p "extra" $extra) -}}

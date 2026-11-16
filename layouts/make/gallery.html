@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{- $ph := .Params.photos | default dict }}
+<div class="wrap">
+  <section class="gallery-hero">
+    {{ partial "placeholder.html" (dict "page" . "img" $ph.main "eager" true "class" "main" "label" "finished mini, front" "alt" (printf "%s: finished, front" .Title) "width" 1100) }}
+    <div class="side">
+      {{ partial "placeholder.html" (dict "page" . "img" $ph.back "label" "back" "alt" (printf "%s: back" .Title) "width" 700) }}
+      {{ partial "placeholder.html" (dict "page" . "img" $ph.detail "label" "detail" "alt" (printf "%s: detail" .Title) "width" 700) }}
+    </div>
+  </section>
+
+  <div class="crumbs" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+    {{ partial "tag-row.html" . }}
+  </div>
+  <h1>{{ .Title }}</h1>
+  {{- with .Params.summary }}
+  <p class="dek" style="font-size:19px;color:#3b3a37;max-width:60ch;margin:0">{{ . }}</p>
+  {{- end }}
+
+  {{- with .Params.wip }}
+  <h2 style="margin-top:24px">Work in progress</h2>
+  <div class="wip">
+    {{- range $i, $w := . }}
+    <figure>{{ partial "placeholder.html" (dict "page" $ "img" $w.image "label" (string (add $i 1)) "alt" ($w.caption | default (printf "Step %d" (add $i 1))) "width" 400) }}{{ with $w.caption }}<figcaption>{{ . }}</figcaption>{{ end }}</figure>
+    {{- end }}
+  </div>
+  {{- end }}
+
+  <div class="post-layout" style="padding-top:0">
+    <article class="prose">
+      {{- with .Params.why }}{{ partial "callout.html" (dict "label" "Why this mini" "body" (. | markdownify)) }}{{ end }}
+      {{ .Content }}
+      {{- with .Params.factcheck }}{{ partial "callout.html" (dict "label" "Fact-check note" "body" (. | markdownify)) }}{{ end }}
+    </article>
+
+    <aside class="aside">
+      <div class="panel recipe">
+        <h3>Paint recipe</h3>
+        {{- range .Params.recipe }}
+        <div class="area"><b>{{ .area }}</b>
+          <div class="swatches">
+            {{- range .paints }}
+            <div class="sw"><i style="background:{{ .hex | safeCSS }}"></i>{{ .name }}{{ with .role }}<em>{{ . }}</em>{{ end }}</div>
+            {{- end }}
+          </div>
+        </div>
+        {{- end }}
+        {{- with .Params.specs }}
+        <div class="area">
+          <dl class="facts">
+            {{- range . }}
+            <dt>{{ .k }}</dt><dd>{{ .v }}</dd>
+            {{- end }}
+          </dl>
+        </div>
+        {{- end }}
+        {{- with .Params.skills }}
+        <div class="area"><b>Skills practised</b>
+          <div class="skills">{{ range . }}<span>{{ . }}</span>{{ end }}</div>
+        </div>
+        {{- end }}
+      </div>
+    </aside>
+  </div>
+</div>
+{{ end }}

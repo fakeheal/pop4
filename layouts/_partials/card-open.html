@@ -1,0 +1,3 @@
+{{- $p := .page -}}
+{{- $tags := slice }}{{ range $p.Params.tags }}{{ $tags = $tags | append (urlize .) }}{{ end -}}
+<a class="panel card {{ partial "section-class.html" $p }}" href="{{ $p.RelPermalink }}" data-section="{{ $p.Section }}" data-tags="{{ delimit $tags " " }}"{{ if .extra }} data-extra{{ end }}>

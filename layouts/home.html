@@ -1,0 +1,110 @@
+{{ define "main" }}
+{{- $posts := where site.RegularPages "Section" "in" (slice "read" "play" "make" "watch") }}
+{{- $all := where site.RegularPages "Params.issue" "!=" nil }}
+{{- $latestIssue := 0 }}{{ range $all }}{{ if gt (int .Params.issue) $latestIssue }}{{ $latestIssue = int .Params.issue }}{{ end }}{{ end }}
+{{- $featured := index (where $posts "Params.featured" true).ByDate.Reverse 0 }}
+<div class="wrap">
+
+  <section class="hero-tagline">
+    <span class="kicker">{{ site.Params.tagline }} &nbsp;·&nbsp; issue #{{ printf "%03d" $latestIssue }}</span>
+    <h1>Fewer binges. <em>Better</em> hobbies.</h1>
+    <p>{{ site.Params.description }} Picked on purpose, written down before moving on.</p>
+  </section>
+
+  {{- with hugo.Data.currently }}
+  <section class="currently">
+    <div class="currently-head">
+      <h2 style="margin:0">Currently</h2>
+      {{- with .updated }}<span class="meta">updated {{ time.Format "Jan 2, 2006" . }}</span>{{ end }}
+    </div>
+    <div class="currently-grid">
+      {{- range .items }}
+      <div class="panel now{{ with .section }} s-{{ . }}{{ end }}">
+        <span class="label">{{ .label }}</span>
+        <strong>{{ .title }}</strong>
+        {{- with .note }}
+        <small>{{ . }}</small>
+        {{- end }}
+        <div class="progress"><i style="width:{{ math.Max 0 (math.Min 100 (.progress | default 0)) }}%"></i></div>
+      </div>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+  {{- with $featured }}
+  {{- $cta := dict "read" "Read the reading log →" "play" "Read the deck diary →" "restoration" "Read the project log →" "gallery" "See the mini →" "watch" "Read the verdict →" }}
+  {{- $kind := cond (eq .Section "make") (.Layout | default "restoration") .Section }}
+  <article class="panel featured {{ partial "section-class.html" . }}">
+    {{ partial "placeholder.html" (dict "page" . "img" (.Params.cover | default .Params.after | default .Params.photos.main) "label" .Title "eager" true) }}
+    <div class="body">
+      <div class="meta"><span class="tag {{ .Section }}">{{ partial "section-label.html" . }}</span>{{ with partial "issue.html" . }}<span class="issue-no">ISSUE #{{ . }}</span>{{ end }}<span>· {{ .Date.Format "Jan 2, 2006" }} · {{ .ReadingTime }} min read</span></div>
+      <h2>{{ .Title }}</h2>
+      {{- with .Params.summary }}
+      <p>{{ . }}</p>
+      {{- end }}
+      <a class="btn" href="{{ .RelPermalink }}">{{ index $cta $kind | default "Read the issue →" }}</a>
+    </div>
+  </article>
+  {{- end }}
+
+  <section>
+    <div class="feed-head">
+      <h2 style="margin:0">Latest issues</h2>
+      <div class="filters" id="filters">
+        <a class="on" href="{{ "/" | relURL }}" data-filter="all">All</a>
+        {{- range slice "read" "play" "make" "watch" }}<a href="{{ printf "/%s/" . | relURL }}" data-filter="{{ . }}">{{ . | title }}</a>{{ end }}
+        <a href="{{ "/tags/marvel/" | relURL }}" data-filter="tag:marvel">#marvel</a>
+      </div>
+    </div>
+
+    <div class="feed" id="feed">
+      {{- $feed := $posts.ByDate.Reverse }}
+      {{- with $featured }}{{ $feed = $feed | complement (slice .) }}{{ end }}
+      {{- /* 6 visible; up to 30 more are hidden and only revealed by the JS filter */}}
+      {{- range $i, $p := first 36 $feed }}
+      {{ partial "card.html" (dict "page" $p "extra" (ge $i 6)) }}
+      {{- end }}
+    </div>
+    {{- if not $feed }}
+    <p class="short-note" style="margin-top:-40px;margin-bottom:56px">More issues are on the way.</p>
+    {{- end }}
+    <p class="short-note" id="feed-empty" hidden>Nothing here in the latest issues. <a href="#" id="feed-more">See all</a></p>
+  </section>
+
+  <section class="doors">
+    {{- range slice "read" "play" "make" "watch" }}
+    {{- with site.GetPage (printf "/%s" .) }}
+    <a class="panel door s-{{ .Section }}" href="{{ .RelPermalink }}"><h3>{{ .Title }}</h3><p>{{ .Description }}</p></a>
+    {{- end }}
+    {{- end }}
+  </section>
+
+  {{- with index (where site.RegularPages "Section" "roundups").ByDate.Reverse 0 }}
+  {{ partial "roundup-panel.html" (dict "page" . "link" true) }}
+  {{- end }}
+
+</div>
+{{ end }}
+
+{{ define "scripts" }}
+<script>
+(() => {
+  const pills = document.querySelectorAll('#filters a'), cards = [...document.querySelectorAll('#feed .card')];
+  const empty = document.getElementById('feed-empty'), more = document.getElementById('feed-more');
+  pills.forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    const f = a.dataset.filter;
+    pills.forEach(p => p.classList.toggle('on', p === a));
+    let shown = 0;
+    cards.forEach(c => {
+      const match = f === 'all' ? !c.hasAttribute('data-extra')
+        : f.startsWith('tag:') ? c.dataset.tags.split(' ').includes(f.slice(4)) : c.dataset.section === f;
+      const show = match && shown < 6; if (show) shown++;
+      c.style.display = show ? 'flex' : 'none';
+    });
+    empty.hidden = shown > 0; more.href = a.href;
+  }));
+})();
+</script>
+{{ end }}

@@ -1,0 +1,4 @@
+<details class="spoiler">
+  <summary>{{ .Get 0 | default "Spoilers" }}</summary>
+  <div class="inner">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
+</details>

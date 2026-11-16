@@ -1,0 +1,7 @@
+{{- $p := .page -}}
+      {{ partial "card-open.html" . }}
+        <div class="top mini-ba">
+          {{ partial "placeholder.html" (dict "page" $p "img" $p.Params.before "text" "before" "c1" "#7c6b52" "c2" "#bba57d" "width" 400) }}
+          {{ partial "placeholder.html" (dict "page" $p "img" $p.Params.after "text" "after" "c1" "#6b5ba8" "c2" "#cfc6f2" "width" 400) }}
+        </div>
+{{ partial "card-body.html" (dict "page" $p "status" true) }}

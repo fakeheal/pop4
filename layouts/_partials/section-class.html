@@ -1,0 +1,4 @@
+{{- /* "s-read" | "s-play" | "s-make" | "s-watch" for pages in those sections, else "" */ -}}
+{{- $c := "" -}}
+{{- if in (slice "read" "play" "make" "watch") .Section }}{{ $c = printf "s-%s" .Section }}{{ end -}}
+{{- return $c -}}

@@ -1,0 +1,26 @@
+{{- /*
+  Markdown images: ![alt](photo.jpg "Optional caption")
+  Bundle images are resized, served as WebP with a fallback, lazy-loaded and open in the lightbox.
+  An image on its own line becomes a <figure>; a missing file falls back to the placeholder.
+*/ -}}
+{{- $p := .PageInner -}}
+{{- $u := urls.Parse .Destination -}}
+{{- $res := "" -}}
+{{- if not $u.IsAbs }}{{ with $p.Resources.Get $u.Path }}{{ if eq .MediaType.MainType "image" }}{{ $res = . }}{{ end }}{{ end }}{{ end -}}
+{{- $alt := .PlainText | default .Title | default $p.Title -}}
+{{- if .IsBlock }}<figure class="post-img">{{ end -}}
+{{- if $res -}}
+  {{- if in (slice "svg" "gif") $res.MediaType.SubType -}}
+  <img src="{{ $res.RelPermalink }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+  {{- else -}}
+  {{- $big := $res.Fit "1600x1600 webp" -}}
+  <a class="zoom" href="{{ $big.RelPermalink }}" data-caption="{{ .Title | default "" }}" aria-label="Enlarge: {{ $alt }}">
+    {{- partial "picture.html" (dict "res" $res "alt" $alt "width" 1200) -}}
+  </a>
+  {{- end -}}
+{{- else if $u.IsAbs -}}
+  <img src="{{ .Destination }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+{{- else -}}
+  {{- partial "placeholder.html" (dict "page" $p "img" .Destination "label" $alt) -}}
+{{- end -}}
+{{- if .IsBlock }}{{ with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}</figure>{{ end -}}

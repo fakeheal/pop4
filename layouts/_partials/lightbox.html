@@ -1,0 +1,25 @@
+{{- /* Lightbox for a.zoom links (native <dialog>). Without JS the link simply opens the large image. */ -}}
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <form method="dialog"><button class="copy" aria-label="Close">Close ✕</button></form>
+  <img alt="">
+  <p></p>
+</dialog>
+<script>
+(() => {
+  const d = document.getElementById('lightbox');
+  if (!d || !d.showModal) return;
+  const img = d.querySelector('img'), cap = d.querySelector('p');
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a.zoom');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    img.src = a.href;
+    img.alt = a.querySelector('img')?.alt || '';
+    cap.textContent = a.dataset.caption || '';
+    cap.hidden = !cap.textContent;
+    d.showModal();
+  });
+  d.addEventListener('click', e => { if (e.target === d || e.target === img) d.close(); });
+  d.addEventListener('close', () => { img.removeAttribute('src'); });
+})();
+</script>

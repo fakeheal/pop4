@@ -1,0 +1,11 @@
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="{{ "/" | relURL }}">pop<span class="iv">iv</span></a>
+    <nav class="nav" aria-label="Sections">
+      {{- range slice "read" "play" "make" "watch" }}
+      {{- $active := eq $.Section . }}
+      <a class="{{ . }}{{ if $active }} active{{ end }}" href="{{ printf "/%s/" . | relURL }}"{{ if $active }} aria-current="page"{{ end }}>{{ . | title }}</a>
+      {{- end }}
+    </nav>
+  </div>
+</header>

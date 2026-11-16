@@ -1,0 +1,17 @@
+{{- /* The dark "Monthly roundup" panel. Args: page, link (bool) */ -}}
+{{- $p := .page -}}
+  <section class="panel roundup">
+    <div class="left">
+      <span class="kicker">Monthly roundup</span>
+      <h2>{{ if .link }}<a href="{{ $p.RelPermalink }}" style="text-decoration:none">{{ $p.Title }}</a>{{ else }}{{ $p.Title }}{{ end }}</h2>
+      {{- with $p.Params.summary }}
+      <p style="margin:0;font-size:14px;opacity:.85">{{ . }}</p>
+      {{- end }}
+      <p style="margin:10px 0 0;font-size:13px;opacity:.7"><time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2, 2006" }}</time>{{ if .link }} · <a href="{{ $p.RelPermalink }}">Read the roundup →</a>{{ end }}</p>
+    </div>
+    <div class="cols">
+      {{- range slice "finished" "dropped" "next" }}
+      <div><h3>{{ . | title }}</h3><ul>{{ range index $p.Params . }}<li>{{ . }}</li>{{ end }}</ul></div>
+      {{- end }}
+    </div>
+  </section>

@@ -1,0 +1,14 @@
+{{- /* WebP with a JPEG/PNG fallback, resized to at most `width`. Args: res, alt, width */ -}}
+{{- $r := .res -}}
+{{- if in (slice "svg" "gif") $r.MediaType.SubType -}}
+<img src="{{ $r.RelPermalink }}" alt="{{ .alt }}" loading="lazy" decoding="async">
+{{- else -}}
+  {{- $w := .width -}}
+  {{- if lt $r.Width $w }}{{ $w = $r.Width }}{{ end -}}
+  {{- $fallback := $r.Resize (printf "%dx" $w) -}}
+  {{- $webp := $r.Resize (printf "%dx webp" $w) -}}
+<picture>
+  <source type="image/webp" srcset="{{ $webp.RelPermalink }}">
+  <img src="{{ $fallback.RelPermalink }}" width="{{ $fallback.Width }}" height="{{ $fallback.Height }}" alt="{{ .alt }}" {{ if .eager }}fetchpriority="high"{{ else }}loading="lazy"{{ end }} decoding="async">
+</picture>
+{{- end -}}

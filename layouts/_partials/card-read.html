@@ -1,0 +1,18 @@
+{{- $p := .page }}{{ $b := $p.Params.book | default dict -}}
+      {{ partial "card-open.html" . }}
+        <div class="top mini-book">
+          {{ partial "placeholder.html" (dict "page" $p "img" $p.Params.cover "width" 200) }}
+          <div class="meta" style="flex-direction:column;align-items:flex-start;gap:2px">
+            <strong style="color:var(--ink);font-size:14px">{{ $b.title | default $p.Title }}</strong>
+            {{- $bits := slice }}
+            {{- with $b.genre }}{{ $bits = $bits | append (index (split . " · ") 0) }}{{ end }}
+            {{- with $b.length }}{{ $bits = $bits | append (replace (index (split . " · ") 0) " pages" " pp") }}{{ end }}
+            {{- with $bits }}
+            <span>{{ delimit . " · " }}</span>
+            {{- end }}
+            {{- with $p.Params.recommend_to }}
+            <span>Recommend to: {{ index . 0 | lower }}</span>
+            {{- end }}
+          </div>
+        </div>
+{{ partial "card-body.html" (dict "page" $p) }}

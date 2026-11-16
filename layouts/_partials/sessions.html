@@ -1,0 +1,7 @@
+{{- $label := dict "win" (slice "w" "Win") "loss" (slice "l" "Loss") "draw" (slice "d" "Draw") }}
+<div class="log">
+  {{- range .Params.sessions }}
+  {{- $r := index $label (.result | default "") }}
+  <div class="entry"><span class="date">{{ .date }}</span><span><strong>{{ .title }}</strong>{{ with .note }}<br>{{ . | markdownify }}{{ end }}</span>{{ with $r }}<span class="result {{ index . 0 }}">{{ index . 1 }}</span>{{ else }}<span></span>{{ end }}</div>
+  {{- end }}
+</div>

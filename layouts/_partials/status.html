@@ -1,0 +1,15 @@
+{{- /* Status badge for Make posts. Args: page, small (bool) */ -}}
+{{- $p := .page -}}
+{{- with $p.Params.status -}}
+  {{- $cls := "" }}{{ $text := "" -}}
+  {{- if eq . "done" }}{{ $cls = "done" }}{{ $text = "Done" -}}
+  {{- else if eq . "on-hold" }}{{ $cls = "hold" }}{{ $text = "On hold" -}}
+  {{- else -}}
+    {{- $text = "In progress" -}}
+    {{- with $p.Params.steps }}{{ if not $.small -}}
+      {{- $done := len (where . "done" true) -}}
+      {{- $text = printf "In progress · step %d of %d" (cond (eq $done 0) 1 $done) (len .) -}}
+    {{- end }}{{ end -}}
+  {{- end -}}
+  <span class="status{{ with $cls }} {{ . }}{{ end }}"{{ if $.small }} style="padding:4px 8px;font-size:10px"{{ end }}>{{ $text }}</span>
+{{- end -}}

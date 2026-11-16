@@ -1,0 +1,5 @@
+{{- /* Given (dict "page" p "img" spec) where spec is a string or {src, alt, ...}, return the src string */ -}}
+{{- $spec := .img -}}
+{{- $src := "" -}}
+{{- if reflect.IsMap $spec }}{{ $src = $spec.src | default "" }}{{ else if $spec }}{{ $src = $spec }}{{ end -}}
+{{- return $src -}}

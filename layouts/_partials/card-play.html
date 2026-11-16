@@ -1,0 +1,18 @@
+{{- $p := .page -}}
+      {{ partial "card-open.html" . }}
+        <div class="top mini-deck">
+          {{- with $p.Params.main }}
+          <div><span>Main</span><span>{{ .hero }}</span></div>
+          {{- with .role }}<div><span>Role</span><span>{{ . }}</span></div>{{ end }}
+          {{- with .hours }}<div><span>Hours</span><span>{{ . }}</span></div>{{ end }}
+          {{- else }}
+          {{- $hero := split ($p.Params.hero | default "") " · " }}
+          <div><span>Hero</span><span>{{ index $hero 0 }}</span></div>
+          {{- if gt (len $hero) 1 }}<div><span>Aspect</span><span>{{ index $hero 1 }}</span></div>{{ end }}
+          {{- with $p.Params.deck }}{{ $n := 0 }}{{ range . }}{{ range .cards }}{{ $n = add $n (int .qty) }}{{ end }}{{ end }}
+          <div><span>Cards</span><span>{{ $n }}</span></div>
+          {{- end }}
+          {{- end }}
+          {{- with $p.Params.record }}<div><span>Record</span><span>{{ . }}</span></div>{{ end }}
+        </div>
+{{ partial "card-body.html" (dict "page" $p) }}

@@ -1,0 +1,25 @@
+{{ define "main" }}
+<section class="post-hero">
+  <div class="wrap">
+    <div class="crumbs"><span class="tag">{{ .Title }}</span><span class="meta">{{ len .RegularPages }} issues{{ with .RegularPages.ByDate.Reverse }} · latest {{ (index . 0).Date.Format "Jan 2, 2006" }}{{ end }} · <a href="{{ with .OutputFormats.Get "rss" }}{{ .RelPermalink }}{{ end }}">RSS</a></span></div>
+    <h1><span class="section-title">{{ .Title }}</span></h1>
+    {{- with .Content }}
+    <div class="dek">{{ . }}</div>
+    {{- else }}{{ with .Description }}
+    <p class="dek">{{ . }}</p>
+    {{- end }}{{ end }}
+  </div>
+</section>
+<div class="wrap">
+  {{- $pg := .Paginate .RegularPages.ByDate.Reverse }}
+  <div class="feed listing">
+    {{- range $pg.Pages }}
+    {{ partial "card.html" . }}
+    {{- end }}
+  </div>
+  {{- if not $pg.Pages }}
+  <p class="short-note" style="margin:-30px 0 70px">No issues here yet.</p>
+  {{- end }}
+  {{ partial "pager.html" $pg }}
+</div>
+{{ end }}
