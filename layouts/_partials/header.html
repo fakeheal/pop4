@@ -1,15 +1,15 @@
 <header class="site-header">
   <div class="wrap">
-    <a class="logo" href="{{ "/" | relURL }}">pop<span class="iv">iv</span></a>
-    <div class="header-end">
+    <div class="header-start">
+      <a class="logo" href="{{ "/" | relURL }}">pop<span class="iv">iv</span></a>
+      <button type="button" class="theme-toggle" id="theme-toggle" hidden></button>
+    </div>
     <nav class="nav" aria-label="Sections">
       {{- range slice "read" "play" "make" "watch" }}
       {{- $active := eq $.Section . }}
       <a class="{{ . }}{{ if $active }} active{{ end }}" href="{{ printf "/%s/" . | relURL }}"{{ if $active }} aria-current="page"{{ end }}>{{ . | title }}</a>
       {{- end }}
     </nav>
-    <button type="button" class="theme-toggle" id="theme-toggle" hidden></button>
-    </div>
   </div>
 </header>
 <script>
