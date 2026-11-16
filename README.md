@@ -1,9 +1,6 @@
 # popiv
 
-**pop culture, by iv**: a Hugo site with four pillars (Read, Play, Make, Watch) plus monthly roundups.
-The design comes from the static mockups in `popiv-mockups/` and is reproduced without a theme:
-all templates live in `layouts/`, and the stylesheet is `assets/css/style.css` (the mockup CSS
-plus a short, labelled block of additions at the end).
+a blog for my hobbies
 
 ## Run it locally
 
