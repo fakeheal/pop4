@@ -36,7 +36,11 @@
   {{- $cta := dict "read" "Read the reading log →" "play" "Read the deck diary →" "restoration" "Read the project log →" "gallery" "See the mini →" "watch" "Read the verdict →" }}
   {{- $kind := cond (eq .Section "make") (.Layout | default "restoration") .Section }}
   <article class="panel featured {{ partial "section-class.html" . }}">
-    {{ partial "placeholder.html" (dict "page" . "img" (.Params.cover | default .Params.after | default .Params.photos.main) "label" .Title "eager" true) }}
+    {{- $img := .Params.cover | default .Params.after | default .Params.photos.main }}
+    {{- /* Portrait photos are shown whole over a blurred copy instead of being cropped to the wide frame */}}
+    {{- $fit := "" }}
+    {{- with .Resources.Get (partial "image-src.html" (dict "img" $img)) }}{{ if and (eq .MediaType.MainType "image") (gt .Height .Width) }}{{ $fit = "blur" }}{{ end }}{{ end }}
+    {{ partial "placeholder.html" (dict "page" . "img" $img "fit" $fit "label" .Title "eager" true) }}
     <div class="body">
       <div class="meta"><span class="tag {{ .Section }}">{{ partial "section-label.html" . }}</span>{{ with partial "issue.html" . }}<span class="issue-no">ISSUE #{{ . }}</span>{{ end }}<span>· {{ .Date.Format "Jan 2, 2006" }} · {{ .ReadingTime }} min read</span></div>
       <h2>{{ .Title }}</h2>
