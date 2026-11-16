@@ -14,7 +14,7 @@
   </div>
   <h1>{{ .Title }}</h1>
   {{- with .Params.summary }}
-  <p class="dek" style="font-size:19px;color:#3b3a37;max-width:60ch;margin:0">{{ . }}</p>
+  <p class="dek" style="font-size:19px;color:var(--text-2);max-width:60ch;margin:0">{{ . }}</p>
   {{- end }}
 
   {{- with .Params.wip }}

@@ -201,6 +201,13 @@ Edit `data/currently.yaml`: change `updated` and the four `items` (`label`, `tit
 - `/sitemap.xml` and `/robots.txt`
 - Open Graph and Twitter tags on every page (the image comes from `cover`, `after` or `photos.main`)
 
+## Dark mode
+
+The site follows the visitor's system light/dark setting. The header button cycles
+**Auto → Light → Dark**; the choice is saved in the browser (`localStorage`), and Auto clears it.
+Colours live as CSS variables at the top of `assets/css/style.css`: the light values are in `:root`,
+and the dark values appear twice (system dark and forced dark), so change both copies together.
+
 ## Hosting: GitHub Pages
 
 `.github/workflows/hugo.yml` builds with `hugo --minify` and deploys on every push to `main`.

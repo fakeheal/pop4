@@ -1,11 +1,38 @@
 <header class="site-header">
   <div class="wrap">
     <a class="logo" href="{{ "/" | relURL }}">pop<span class="iv">iv</span></a>
+    <div class="header-end">
     <nav class="nav" aria-label="Sections">
       {{- range slice "read" "play" "make" "watch" }}
       {{- $active := eq $.Section . }}
       <a class="{{ . }}{{ if $active }} active{{ end }}" href="{{ printf "/%s/" . | relURL }}"{{ if $active }} aria-current="page"{{ end }}>{{ . | title }}</a>
       {{- end }}
     </nav>
+    <button type="button" class="theme-toggle" id="theme-toggle" hidden></button>
+    </div>
   </div>
 </header>
+<script>
+(() => {
+  // Cycles Auto (system) → Light → Dark. The choice is saved in localStorage; Auto clears it.
+  const btn = document.getElementById('theme-toggle'), root = document.documentElement;
+  const modes = ['auto', 'light', 'dark'];
+  const labels = { auto: '◐ Auto', light: '☀ Light', dark: '☾ Dark' };
+  const get = () => root.dataset.theme || 'auto';
+  const show = () => {
+    const m = get();
+    btn.textContent = labels[m];
+    btn.setAttribute('aria-label', `Theme: ${m === 'auto' ? 'automatic (follows system)' : m}. Click to change.`);
+  };
+  const set = m => {
+    if (m === 'auto') delete root.dataset.theme; else root.dataset.theme = m;
+    try { m === 'auto' ? localStorage.removeItem('theme') : localStorage.setItem('theme', m); } catch (e) {}
+    show();
+  };
+  btn.addEventListener('click', () => set(modes[(modes.indexOf(get()) + 1) % modes.length]));
+  // Keep other open tabs in sync
+  addEventListener('storage', e => { if (e.key === 'theme') { if (e.newValue) root.dataset.theme = e.newValue; else delete root.dataset.theme; show(); } });
+  btn.hidden = false;
+  show();
+})();
+</script>
