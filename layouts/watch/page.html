@@ -1,7 +1,7 @@
 {{ define "main" }}
 {{- $v := .Params.verdict | default "watch" }}
 {{- $paras := len (findRE `<p[ >]` .Content) }}
-{{- if gt $paras 3 }}{{ warnf "%s: Watch posts should stay short (3 paragraphs max); this one has %d" .File.Path $paras }}{{ end }}
+{{- if and (gt $paras 3) (not .Params.long) }}{{ warnf "%s: Watch posts should stay short (3 paragraphs max); this one has %d" .File.Path $paras }}{{ end }}
 <div class="wrap">
   <div class="post-layout narrow">
     <article>
@@ -9,9 +9,10 @@
         {{ partial "tag-row.html" . }}
       </div>
 
-      <div class="panel watch-card">
-        <div>
-          <h1 style="font-size:40px;margin-bottom:10px">{{ .Params.name | default .Title }}</h1>
+      {{- $stamp := printf `<span class="stamp %s">%s</span>` (cond (eq $v "watch") "go" $v) (upper $v) | safeHTML }}
+      <div class="panel watch-card{{ with .Params.cover }} has-cover{{ end }}">
+        <div class="info">
+          <h1>{{ .Params.name | default .Title }}</h1>
           <dl class="facts">
             {{- $type := slice }}{{ with .Params.kind }}{{ $type = $type | append . }}{{ end }}{{ with .Params.year }}{{ $type = $type | append (string .) }}{{ end }}
             {{- with $type }}<dt>Type</dt><dd>{{ delimit . " · " }}</dd>{{ end }}
@@ -23,7 +24,13 @@
             {{- range slice "watch" "wait" "skip" }}<span class="{{ . }}{{ if eq . $v }} on{{ end }}">{{ title . }}</span>{{ end -}}
           </div>
         </div>
-        <span class="stamp {{ cond (eq $v "watch") "go" $v }}">{{ upper $v }}</span>
+        {{- with .Params.cover }}
+        {{- /* Optional cover.focus ("20% 50%") picks which part of the image stays in view when it's cropped */}}
+        {{- $focus := "" }}{{ if reflect.IsMap . }}{{ with .focus }}{{ $focus = printf "--focus:%s" . }}{{ end }}{{ end }}
+        <div class="cover">{{ partial "placeholder.html" (dict "page" $ "img" . "label" $.Title "width" 900 "eager" true "style" $focus) }}{{ $stamp }}</div>
+        {{- else }}
+        {{ $stamp }}
+        {{- end }}
       </div>
 
       <div class="prose" style="margin-top:40px">

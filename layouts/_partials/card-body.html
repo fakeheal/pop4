@@ -1,12 +1,13 @@
 {{- /* Shared lower half of a card. Args: page, status (bool) */ -}}
 {{- $p := .page -}}
+{{- $lang := "" }}{{ with $p.Params.lang }}{{ $lang = printf " lang=%q" . | safeHTMLAttr }}{{ end -}}
         <div class="body">
           <div class="meta"><span class="tag">{{ partial "section-label.html" $p }}</span>{{ with partial "issue.html" $p }}<span class="issue-no">#{{ . }}</span>{{ end }}
             {{- if .status }}{{ partial "status.html" (dict "page" $p "small" true) }}{{ end }}
             {{- range first 2 ($p.Params.tags | default slice) }}<span>#{{ . | urlize }}</span>{{ end }}</div>
-          <h3>{{ $p.Title }}</h3>
+          <h3{{ $lang }}>{{ $p.Title }}</h3>
           {{- with $p.Params.summary }}
-          <p>{{ . }}</p>
+          <p{{ $lang }}>{{ . }}</p>
           {{- end }}
           <div class="foot"><time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2, 2006" }}</time><span>{{ $p.ReadingTime }} min</span></div>
         </div>

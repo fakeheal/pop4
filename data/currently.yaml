@@ -15,10 +15,10 @@ items:
   - label: "On the bench"
     title: "Nintendo DS Lite, yellowed shell"
     note: "Retrobrighting · step 0 of 6"
-    progress: 50
+    progress: 0
     section: make
   - label: "Watching"
-    title: "Carrie 2026"
-    note: "One episode away from ending the season"
-    progress: 80
+    title: "The Blacklist"
+    note: "Recommended by many of my friends"
+    progress: 1
     section: watch

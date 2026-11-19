@@ -75,6 +75,7 @@ A missing file shows the placeholder and a build warning instead of a broken ima
 | `cover` | Optional image; empty = halftone placeholder |
 | `subtype` | Optional first ghost tag in the crumbs (defaults: Play = game, Read = first genre, Make = "Restoration" / "Minifigure painting", Watch = `kind`) |
 | `draft` | `true` hides the post unless you run with `-D` |
+| `lang` | Optional language of the post, e.g. `"bg"`. Sets `lang` on the page's `<html>` and on its homepage/list card (defaults to the site's `en`) |
 
 **Images.** Any image field (`cover`, `before`, `after`, `photos.*`, `steps[].image`, `wip[].image`)
 takes either a filename in the bundle or a map:
@@ -164,11 +165,21 @@ year: 2026
 runtime: "1h 32m"
 where: "Streaming, at home"
 verdict: "watch"                # watch | wait | skip
+long: true                      # optional: turns off the 3-paragraph warning for this post
 related: "/read/iron-choir"     # optional "If you liked this"
 related_note: "has a similar quiet, patient pace."
 ```
 
 Watch posts are meant to stay short: the build prints a warning if the body has more than 3 paragraphs.
+Set `long: true` to turn the warning off for a single post.
+Without a `cover`, Watch cards and the post show only the verdict stamp. With one, the image fills the top of the
+feed card, and on the post it fills the right column of the verdict card (on top on phones), with the stamp in its
+top-right corner. The column is narrower than a wide banner, so the image gets cropped; add `focus` to choose which
+part stays in view (CSS `object-position`, horizontal then vertical):
+
+```yaml
+cover: { src: "poster.jpg", alt: "…", focus: "10% 50%" }   # keep the left side of the image
+```
 
 ### Roundup (`content/roundups/`)
 

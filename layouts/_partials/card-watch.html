@@ -1,4 +1,9 @@
 {{- $p := .page }}{{ $v := $p.Params.verdict | default "watch" -}}
+{{- $stamp := printf `<span class="stamp %s">%s</span>` (cond (eq $v "watch") "go" $v) (upper $v) | safeHTML -}}
       {{ partial "card-open.html" . }}
-        <div class="top mini-verdict"><span class="stamp {{ cond (eq $v "watch") "go" $v }}">{{ upper $v }}</span></div>
+        {{- with $p.Params.cover }}
+        <div class="top mini-verdict has-cover">{{ partial "placeholder.html" (dict "page" $p "img" . "label" $p.Title "width" 700) }}{{ $stamp }}</div>
+        {{- else }}
+        <div class="top mini-verdict">{{ $stamp }}</div>
+        {{- end }}
 {{ partial "card-body.html" (dict "page" $p) }}
