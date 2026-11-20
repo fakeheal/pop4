@@ -6,7 +6,6 @@ layout: restoration
 summary: "A yellowed, dead DMG-01 from a second-hand marketplace gets an IPS screen, a mint shell and new buttons."
 why: "I found it pretty cheap on a second-hand marketplace. I'd never owned one and knew almost nothing about it, but I'd watched a few restoration videos and wanted to try one myself."
 tags: [nintendo, soldering]
-featured: true
 draft: false
 cover: "after.jpg"
 factcheck: "Part names and prices are from my order receipt. I ordered in January 2024 and paid in BGN; prices are converted to EUR at the fixed rate of 1 EUR = 1.95583 BGN."

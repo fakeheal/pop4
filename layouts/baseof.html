@@ -3,7 +3,8 @@
 <head>
 {{ partial "head.html" . }}
 </head>
-<body{{ with partial "section-class.html" . }} class="{{ . }}"{{ end }}>
+{{- $bodyClass := partial "section-class.html" . }}
+<body{{ if $bodyClass }} class="{{ $bodyClass }}"{{ end }}>
 {{ partial "header.html" . }}
 <main>
 {{ block "main" . }}{{ end }}

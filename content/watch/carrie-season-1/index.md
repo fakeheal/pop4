@@ -5,7 +5,6 @@ issue: 2
 summary: "The fourth screen adaptation of Stephen King's novel still finds something new to say: today's American high school is scarier than any supernatural power."
 why: "Watched the old movies, was curious what would this add"
 tags: [stephen-king, horror, prime-video]
-featured: true
 cover: { src: "Carrie-1000-b.jpg", alt: "Promo banner for Carrie: Carrie in a tiara, holding her head, in front of a blurred crowd", focus: "8% 50%" }
 draft: false
 long: true

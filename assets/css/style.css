@@ -67,7 +67,7 @@ body {
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; }
-.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 48px 24px; }
 
 /* ---------- Header ---------- */
 .site-header {
