@@ -1,6 +1,6 @@
 baseURL = "https://pop4.itodorova.dev"
 locale = "en"
-title = "POP 4"
+title = "pop iv"
 enableRobotsTXT = true
 capitalizeListTitles = false   # keep tag/game names as written (#marvel, Marvel Champions)
 summaryLength = 30

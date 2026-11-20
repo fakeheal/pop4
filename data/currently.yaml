@@ -1,24 +1,39 @@
-# The "Currently" strip on the homepage. Edit this file and rebuild.
-# section: read | play | make | watch (sets the colour). progress: 0–100.
-updated: 2026-11-16
-items:
-  - label: "Reading"
-    title: "Oathbringer"
-    note: "Book 3 of the The Stormlight Archive · p. 72 / 1248"
-    progress: 7
-    section: read
-  - label: "Playing"
-    title: "World of Warcraft: Forever"
-    note: "PvE Human Paladin · Protection"
-    progress: 45
-    section: play
-  - label: "On the bench"
-    title: "Nintendo DS Lite, yellowed shell"
-    note: "Retrobrighting · step 0 of 6"
-    progress: 0
-    section: make
-  - label: "Watching"
-    title: "The Blacklist"
-    note: "Recommended by many of my friends"
-    progress: 1
-    section: watch
+updated: 2026-11-20
+
+read:
+  now:
+    - title: "Oathbringer"
+      note: "Book 3 of the The Stormlight Archive"
+      progress: 7
+    - title: "Phoenix (2024)"
+      note: "Solo X-Men book. Lovely covers."
+      progress: 14
+  next: []
+
+play:
+  now:
+    - title: "World of Warcraft: Forever"
+      note: "PvE Human Paladin · Protection"
+      progress: 45
+    - title: "The Wolf Among Us"
+      note: "a classic among narrative adventures"
+  next: [
+    { title: "Split Fiction", note: "super hyped about this" }
+  ]
+
+make:
+  label: "On the bench"
+  now:
+    - title: "Nintendo DS Lite, yellowed shell"
+      note: "Retrobrighting · step 0 of 6"
+      progress: 0
+  next: []
+
+watch:
+  now:
+    - title: "The Blacklist"
+      note: "Recommended by many of my friends"
+      progress: 4
+  next: [
+    {title: "Rings of Power", note: "full rewatch before starting season 3"}
+  ]

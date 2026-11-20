@@ -58,15 +58,48 @@
       {{- with .updated }}<span class="meta">updated {{ time.Format "Jan 2, 2006" . }}</span>{{ end }}
     </div>
     <div class="currently-grid">
-      {{- range .items }}
-      <div class="panel now{{ with .section }} s-{{ . }}{{ end }}">
-        <span class="label">{{ .label }}</span>
-        <strong>{{ .title }}</strong>
-        {{- with .note }}
-        <small>{{ . }}</small>
+      {{- $data := . }}
+      {{- $labels := dict "read" "Reading" "play" "Playing" "make" "Making" "watch" "Watching" }}
+      {{- range $s := slice "read" "play" "make" "watch" }}
+      {{- with index $data $s }}
+      {{- $now := .now | default slice }}
+      {{- $next := .next | default slice }}
+      <div class="panel now-col s-{{ $s }}">
+        <div class="now-head">
+          <span class="label">{{ .label | default (index $labels $s) }}</span>
+          <span class="count">{{ len $now }} now{{ with $next }} · {{ len . }} next{{ end }}</span>
+        </div>
+        {{- range $now }}
+        <div class="now-item">
+          {{- with .kind }}<span class="kind">{{ . }}</span>{{ end }}
+          <strong>{{ .title }}</strong>
+          {{- with .note }}
+          <small>{{ . }}</small>
+          {{- end }}
+          {{- if isset . "progress" }}
+          {{- $p := math.Max 0 (math.Min 100 .progress) }}
+          <div class="progress" role="progressbar" aria-valuenow="{{ $p }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ .title }} progress"><i style="width:{{ $p }}%"></i></div>
+          {{- end }}
+        </div>
+        {{- else }}
+        <p class="now-empty">Nothing on the go.</p>
         {{- end }}
-        <div class="progress"><i style="width:{{ math.Max 0 (math.Min 100 (.progress | default 0)) }}%"></i></div>
+        {{- with $next }}
+        <details class="up-next">
+          <summary>Up next ({{ len . }})</summary>
+          <ol>
+            {{- range . }}
+            {{- if reflect.IsMap . }}
+            <li>{{ .title }}{{ with .note }} <small>{{ . }}</small>{{ end }}</li>
+            {{- else }}
+            <li>{{ . }}</li>
+            {{- end }}
+            {{- end }}
+          </ol>
+        </details>
+        {{- end }}
       </div>
+      {{- end }}
       {{- end }}
     </div>
   </section>
