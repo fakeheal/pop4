@@ -1,6 +1,6 @@
 <footer class="site-footer">
   <div class="wrap">
     <span>© {{ now.Year }} {{ site.Title }} · {{ site.Params.tagline }} · Spotted an error? Tell me and I'll fix it with credit.</span>
-    <span><a href="{{ "/index.xml" | relURL }}">RSS</a> · <a href="{{ "/tags/" | relURL }}">Tags</a> · <a href="{{ "/roundups/" | relURL }}">Roundups</a></span>
+    <span><a href="{{ "/index.xml" | relURL }}">RSS</a> · <a href="{{ "/tags/" | relURL }}">Tags</a> · <a href="{{ "/roundups/" | relURL }}">Roundups</a>{{ with site.Params.website }} · <a href="{{ . }}" rel="me">{{ strings.TrimPrefix "https://" . }} ↗</a>{{ end }}</span>
   </div>
 </footer>

@@ -9,6 +9,7 @@ summaryLength = 30
   tagline = "break the 4th wall"
   description = "my personal space for all my hobbies"
   author = "iv"
+  website = "https://itodorova.dev"   # footer link to my personal site
 
 [taxonomies]
   tag = "tags"
