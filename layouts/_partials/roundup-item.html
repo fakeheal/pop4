@@ -1,0 +1,22 @@
+{{- /* One line in a roundup column. Item is a string, or a map:
+     post: "read/comics-tva-2024"   links the post and takes its title + section
+     title, section (read|play|make|watch), note: for things without a post */ -}}
+{{- $title := "" }}{{ $section := "" }}{{ $note := "" }}{{ $link := "" -}}
+{{- if reflect.IsMap . }}
+  {{- $title = .title }}{{ $section = .section }}{{ $note = .note }}
+  {{- with .post }}
+    {{- with site.GetPage . }}
+      {{- $link = .RelPermalink }}{{ $title = $title | default .Title }}{{ $section = $section | default .Section }}
+    {{- else }}
+      {{- warnf "roundup: no post found at %q" . }}
+    {{- end }}
+  {{- end }}
+{{- else }}
+  {{- $title = . }}
+{{- end -}}
+{{- $known := in (slice "read" "play" "make" "watch") $section -}}
+<li{{ if $known }} class="s-{{ $section }}"{{ end }}>
+  {{- if $known }}<span class="tag">{{ index (dict "read" "Read" "play" "Play" "make" "Make" "watch" "Watch") $section }}</span>{{ end }}
+  {{- if $link }}<a href="{{ $link }}">{{ $title }}</a>{{ else }}<span class="t">{{ $title }}</span>{{ end }}
+  {{- with $note }}<small>{{ . }}</small>{{ end -}}
+</li>

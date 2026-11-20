@@ -12,6 +12,9 @@ factcheck: ""        # optional "Fact-check note" callout at the end
 why: ""
 draft: true
 month: "{{ (now.AddDate 0 -1 0).Format "January" }}"
+# Each list item is a plain string, or:
+#   - { post: "read/some-post", note: "optional" }        links the post, takes its title + colour
+#   - { title: "Thing", section: read|play|make|watch, note: "why I dropped it" }
 finished: []
 dropped: []
 next: []

@@ -2,7 +2,7 @@
 {{- $p := .page -}}
   <section class="panel roundup">
     <div class="left">
-      <span class="kicker">Monthly roundup</span>
+      <span class="kicker">Monthly roundup{{ with $p.Params.month }} · {{ . }}{{ end }}</span>
       <h2>{{ if .link }}<a href="{{ $p.RelPermalink }}" style="text-decoration:none">{{ $p.Title }}</a>{{ else }}{{ $p.Title }}{{ end }}</h2>
       {{- with $p.Params.summary }}
       <p style="margin:0;font-size:14px;opacity:.85">{{ . }}</p>
@@ -10,8 +10,18 @@
       <p style="margin:10px 0 0;font-size:13px;opacity:.7"><time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "Jan 2, 2006" }}</time>{{ if .link }} · <a href="{{ $p.RelPermalink }}">Read the roundup →</a>{{ end }}</p>
     </div>
     <div class="cols">
-      {{- range slice "finished" "dropped" "next" }}
-      <div><h3>{{ . | title }}</h3><ul>{{ range index $p.Params . }}<li>{{ . }}</li>{{ end }}</ul></div>
+      {{- range $k := slice "finished" "dropped" "next" }}
+      {{- $items := index $p.Params $k | default slice }}
+      <div class="col-{{ $k }}">
+        <h3>{{ $k | title }} <span class="n">{{ len $items }}</span></h3>
+        {{- with $items }}
+        <ul>
+          {{- range . }}{{ partial "roundup-item.html" . }}{{ end }}
+        </ul>
+        {{- else }}
+        <p class="none">{{ cond (eq $k "dropped") "Nothing. Stubborn month." "—" }}</p>
+        {{- end }}
+      </div>
       {{- end }}
     </div>
   </section>
