@@ -406,6 +406,7 @@ table.parts tr.total td { border-top: 2px solid var(--ink); border-bottom: 0; fo
   .featured .ph { border-right: 0; border-bottom: var(--border); min-height: 240px; }
   .roundup .cols > div:first-child { border-left: 0; }
   .post-layout { grid-template-columns: 1fr; }
+  .post-layout.aside-first > .aside { order: -1; }
   .sticky { position: static; }
   .timeline li { grid-template-columns: 52px 1fr; }
   .timeline li .ph { grid-column: 2; }

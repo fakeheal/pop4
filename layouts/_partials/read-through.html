@@ -8,7 +8,7 @@
   if (!prose || !('IntersectionObserver' in window)) return;
   const end = document.createElement('div');
   end.setAttribute('aria-hidden', 'true');
-  prose.after(end);
+  prose.append(end); // inside, not after: .prose is often a grid item and a sibling would take the aside's column
   const start = Date.now();
   const send = () => window.umami?.track('read-through', { post: location.pathname });
   const io = new IntersectionObserver(entries => {

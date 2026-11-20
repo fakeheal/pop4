@@ -26,7 +26,7 @@
   </div>
   {{- end }}
 
-  <div class="post-layout" style="padding-top:0">
+  <div class="post-layout aside-first" style="padding-top:0">
     <article class="prose">
       {{- with .Params.why }}{{ partial "callout.html" (dict "label" "Why this mini" "body" (. | markdownify)) }}{{ end }}
       {{ .Content }}

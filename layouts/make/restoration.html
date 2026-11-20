@@ -31,7 +31,7 @@
 </section>
 
 <div class="wrap">
-  <div class="post-layout">
+  <div class="post-layout aside-first">
     <article class="prose">
       {{- with .Params.why }}{{ partial "callout.html" (dict "label" "Why this project" "body" (. | markdownify)) }}{{ end }}
       {{ .Content }}
