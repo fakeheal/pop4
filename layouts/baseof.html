@@ -12,5 +12,6 @@
 {{ partial "footer.html" . }}
 {{- if and .IsPage (or .Params.steps (strings.Contains .Content "class=\"zoom\"")) }}{{ partial "lightbox.html" . }}{{ end }}
 {{ block "scripts" . }}{{ end }}
+{{- if and .IsPage (in (slice "read" "play" "make" "watch" "roundups") .Section) }}{{ partial "read-through.html" . }}{{ end }}
 </body>
 </html>

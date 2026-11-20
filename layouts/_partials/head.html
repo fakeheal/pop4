@@ -41,4 +41,5 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@900&family=Inter:wght@400;600;800&family=JetBrains+Mono&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 {{- $css := resources.Get "css/style.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
-<script defer src="https://cloud.umami.is/script.js" data-website-id="0ffec14c-bb72-437c-885a-66a3b752a76f"></script>
+{{- /* data-domains: only count visits on the live host, not hugo server / localhost */}}
+<script defer src="https://cloud.umami.is/script.js" data-website-id="0ffec14c-bb72-437c-885a-66a3b752a76f" data-domains="{{ (urls.Parse site.BaseURL).Hostname }}"></script>

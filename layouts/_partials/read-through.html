@@ -1,0 +1,21 @@
+{{- /* Umami "read-through" event: fires once when a reader reaches the end of the post's text
+     and has been on the page at least MIN_SECONDS (so fast scrolls to the bottom don't count).
+     Shows up in Umami → Events, with the post path as event data. */ -}}
+<script>
+(() => {
+  const MIN_SECONDS = 20;
+  const prose = [...document.querySelectorAll('.prose')].pop();
+  if (!prose || !('IntersectionObserver' in window)) return;
+  const end = document.createElement('div');
+  end.setAttribute('aria-hidden', 'true');
+  prose.after(end);
+  const start = Date.now();
+  const send = () => window.umami?.track('read-through', { post: location.pathname });
+  const io = new IntersectionObserver(entries => {
+    if (!entries.some(e => e.isIntersecting)) return;
+    io.disconnect();
+    setTimeout(send, Math.max(0, MIN_SECONDS * 1000 - (Date.now() - start)));
+  });
+  io.observe(end);
+})();
+</script>
