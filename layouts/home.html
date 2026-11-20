@@ -5,37 +5,10 @@
 {{- $featured := index (where $posts "Params.featured" true).ByDate.Reverse 0 }}
 <div class="wrap">
 
-  <section class="hero-tagline">
-    <span class="kicker">{{ site.Params.tagline }} &nbsp;·&nbsp; issue #{{ printf "%03d" $latestIssue }}</span>
-    <h1>Fewer binges. <em>Better</em> hobbies.</h1>
-    <p>{{ site.Params.description }} Picked on purpose, written down before moving on.</p>
-  </section>
-
-  {{- with hugo.Data.currently }}
-  <section class="currently">
-    <div class="currently-head">
-      <h2 style="margin:0">Currently</h2>
-      {{- with .updated }}<span class="meta">updated {{ time.Format "Jan 2, 2006" . }}</span>{{ end }}
-    </div>
-    <div class="currently-grid">
-      {{- range .items }}
-      <div class="panel now{{ with .section }} s-{{ . }}{{ end }}">
-        <span class="label">{{ .label }}</span>
-        <strong>{{ .title }}</strong>
-        {{- with .note }}
-        <small>{{ . }}</small>
-        {{- end }}
-        <div class="progress"><i style="width:{{ math.Max 0 (math.Min 100 (.progress | default 0)) }}%"></i></div>
-      </div>
-      {{- end }}
-    </div>
-  </section>
-  {{- end }}
-
   {{- with $featured }}
   {{- $cta := dict "read" "Read the reading log →" "play" "Read the deck diary →" "restoration" "Read the project log →" "gallery" "See the mini →" "watch" "Read the verdict →" }}
   {{- $kind := cond (eq .Section "make") (.Layout | default "restoration") .Section }}
-  <article class="panel featured {{ partial "section-class.html" . }}">
+  <article class="panel featured {{ partial "section-class.html" . }}" style="margin-top:24px">
     {{- $img := .Params.cover | default .Params.after | default .Params.photos.main }}
     {{- /* Portrait photos are shown whole over a blurred copy instead of being cropped to the wide frame */}}
     {{- $fit := "" }}
@@ -76,12 +49,40 @@
     <p class="short-note" id="feed-empty" hidden>Nothing here in the latest issues. <a href="#" id="feed-more">See all</a></p>
   </section>
 
-  <section class="doors">
-    {{- range slice "read" "play" "make" "watch" }}
-    {{- with site.GetPage (printf "/%s" .) }}
-    <a class="panel door s-{{ .Section }}" href="{{ .RelPermalink }}"><h3>{{ .Title }}</h3><p>{{ .Description }}</p></a>
-    {{- end }}
-    {{- end }}
+  
+
+  {{- with hugo.Data.currently }}
+  <section class="currently">
+    <div class="currently-head">
+      <h2 style="margin:0">Currently</h2>
+      {{- with .updated }}<span class="meta">updated {{ time.Format "Jan 2, 2006" . }}</span>{{ end }}
+    </div>
+    <div class="currently-grid">
+      {{- range .items }}
+      <div class="panel now{{ with .section }} s-{{ . }}{{ end }}">
+        <span class="label">{{ .label }}</span>
+        <strong>{{ .title }}</strong>
+        {{- with .note }}
+        <small>{{ . }}</small>
+        {{- end }}
+        <div class="progress"><i style="width:{{ math.Max 0 (math.Min 100 (.progress | default 0)) }}%"></i></div>
+      </div>
+      {{- end }}
+    </div>
+  </section>
+  {{- end }}
+
+  <section class="doors-container">
+    <div class="doors-container-head">
+      <h2>Categories</h2>
+    </div>
+    <div class="doors">
+      {{- range slice "read" "play" "make" "watch" }}
+      {{- with site.GetPage (printf "/%s" .) }}
+      <a class="panel door s-{{ .Section }}" href="{{ .RelPermalink }}"><h3>{{ .Title }}</h3><p>{{ .Description }}</p></a>
+      {{- end }}
+      {{- end }}
+    </div>
   </section>
 
   {{- with index (where site.RegularPages "Section" "roundups").ByDate.Reverse 0 }}

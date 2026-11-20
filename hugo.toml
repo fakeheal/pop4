@@ -6,8 +6,8 @@ capitalizeListTitles = false   # keep tag/game names as written (#marvel, Marvel
 summaryLength = 30
 
 [params]
-  tagline = "pop culture, by iv"
-  description = "Notes on what I read, play, make and watch: comics, fantasy & sci-fi, ttprgs, card games, video games, electronics and tiny painted heroes."
+  tagline = "break the 4th wall"
+  description = "my personal space for all my hobbies"
   author = "iv"
 
 [taxonomies]
